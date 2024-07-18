@@ -61,7 +61,11 @@ except Exception as e:
 
 def download_zip(folder_url):
     # Get the current list of files in the Downloads folder
-    downloads_folder = os.path.join(os.path.expanduser("~"), "Downloads")
+    downloads_folder = os.path.expanduser('~/Downloads')
+
+    # Create the downloads folder if it doesn't exist
+    if not os.path.exists(downloads_folder):
+        os.makedirs(downloads_folder)
     before_download = set(os.listdir(downloads_folder))
     
     driver.get(folder_url)
