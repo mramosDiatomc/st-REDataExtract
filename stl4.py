@@ -53,7 +53,7 @@ options.add_argument('--log-level=3')
 
 try:
     # Initialize Chrome WebDriver with options
-    browser = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(options=options)
     print("Chrome WebDriver initialized successfully.")
 except Exception as e:
     print(f"Failed to initialize Chrome WebDriver: {e}")
