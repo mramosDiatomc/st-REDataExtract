@@ -38,17 +38,22 @@ def download_chromedriver():
 def init_driver():
     download_chromedriver()
 
-    options = Options()
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--headless')
-    options.add_argument('--log-level=3')
-
-    driver = webdriver.Chrome(options=options)
+    chrome_options = Options()
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-software-rasterizer')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--disable-extensions')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--remote-debugging-port=9222')
+    
+    driver = webdriver.Chrome(options=chrome_options)
     return driver
 
-
 def download_zip(folder_url):
+    driver = init_driver()
     # Get the current list of files in the Downloads folder
     downloads_folder = os.path.expanduser('~/Downloads')
 
