@@ -30,28 +30,22 @@ azure_endpoint = st.secrets["azure"]["az_endpoint"]
 azure_key  = st.secrets["azure"]["az_key"]
 model_id = st.secrets["azure"]["az_model_id"]
 
-def chromedriver_download():
-    # Assuming `sbase` is not available
-    os.system('pip install seleniumbase')  # Install seleniumbase
-    # Use a local directory to avoid permissions issues
-    local_path = '/home/vscode/.cache/selenium/chrome/linux64'
-    os.system(f'ln -s {local_path}/chromedriver /home/vscode/chromedriver')
+def download_chromedriver():
+    os.system('sbase install chromedriver')
+    os.system('ln -s /home/appuser/.local/lib/python3.7/site-packages/seleniumbase/drivers/chromedriver /usr/bin/chromedriver')
 
-chromedriver_download()
+@st.cache_resource
+def init_driver():
+    download_chromedriver()
 
-# Set up Chrome options
-options = Options()
-options.add_argument('--no-sandbox')
-options.add_argument('--disable-dev-shm-usage')  
-options.add_argument('--headless')
-options.add_argument('--log-level=3')
+    options = Options()
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--headless')
+    options.add_argument('--log-level=3')
 
-try:
-    # Initialize Chrome WebDriver with options
     driver = webdriver.Chrome(options=options)
-    print("Chrome WebDriver initialized successfully.")
-except Exception as e:
-    print(f"Failed to initialize Chrome WebDriver: {e}")
+    return driver
 
 
 def download_zip(folder_url):
