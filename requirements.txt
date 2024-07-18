@@ -2,5 +2,5 @@ streamlit==1.35.0
 selenium==4.19.0
 PyPDF2==3.0.1
 azure-ai-formrecognizer==3.3.0
-tqdm
-pandas
+tqdm==4.65.0
+pandas==2.1.4
