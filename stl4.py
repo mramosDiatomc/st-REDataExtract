@@ -19,6 +19,7 @@ from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 import shutil
 import glob
+from webdriver_manager.core.os_manager import ChromeType
 
 
 # Page setup
@@ -30,30 +31,23 @@ azure_endpoint = st.secrets["azure"]["az_endpoint"]
 azure_key  = st.secrets["azure"]["az_key"]
 model_id = st.secrets["azure"]["az_model_id"]
 
-def download_chromedriver():
-    os.system('sbase install chromedriver')
-    os.system('ln -s /home/appuser/.local/lib/python3.7/site-packages/seleniumbase/drivers/chromedriver /usr/bin/chromedriver')
-
 @st.cache_resource
-def init_driver():
-    download_chromedriver()
+def get_driver():
+    options = Options()
+    options.add_argument("--disable-gpu")
+    options.add_argument("--headless")
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
 
-    chrome_options = Options()
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--disable-software-rasterizer')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument('--disable-extensions')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument('--remote-debugging-port=9222')
-    
-    driver = webdriver.Chrome(options=chrome_options)
+    driver = webdriver.Chrome(
+        service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),
+        options=options
+    )
     return driver
 
 def download_zip(folder_url):
-    driver = init_driver()
+    driver = get_driver()
+
     # Get the current list of files in the Downloads folder
     downloads_folder = os.path.expanduser('~/Downloads')
 
