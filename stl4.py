@@ -31,17 +31,12 @@ azure_key  = st.secrets["azure"]["az_key"]
 model_id = st.secrets["azure"]["az_model_id"]
 
 def chromedriver_download():
-    """Download seleniumbase chromedriver and create a symbolic link."""
-    try:
-        # Download chromedriver using seleniumbase
-        os.system('sbase install chromedriver')
-        
-        # Create a symbolic link to the chromedriver
-        os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/chromedriver /usr/bin/chromedriver')
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    # Assuming `sbase` is not available
+    os.system('pip install seleniumbase')  # Install seleniumbase
+    # Use a local directory to avoid permissions issues
+    local_path = '/home/vscode/.cache/selenium/chrome/linux64'
+    os.system(f'ln -s {local_path}/chromedriver /home/vscode/chromedriver')
 
-# Call the function to download chromedriver
 chromedriver_download()
 
 # Set up Chrome options
