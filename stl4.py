@@ -30,15 +30,33 @@ azure_endpoint = st.secrets["azure"]["az_endpoint"]
 azure_key  = st.secrets["azure"]["az_key"]
 model_id = st.secrets["azure"]["az_model_id"]
 
-# Setup Selenium WebDriver
-chrome_driver_path = "/usr/bin/chromedriver"  # Linux path for Streamlit Community Cloud
+def chromedriver_download():
+    """Download seleniumbase chromedriver and create a symbolic link."""
+    try:
+        # Download chromedriver using seleniumbase
+        os.system('sbase install chromedriver')
+        
+        # Create a symbolic link to the chromedriver
+        os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/chromedriver /usr/bin/chromedriver')
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
-options = webdriver.ChromeOptions()
-options.add_argument('--headless')  # Run in headless mode
+# Call the function to download chromedriver
+chromedriver_download()
+
+# Set up Chrome options
+options = Options()
 options.add_argument('--no-sandbox')
-options.add_argument('--disable-dev-shm-usage')
+options.add_argument('--disable-dev-shm-usage')  
+options.add_argument('--headless')
+options.add_argument('--log-level=3')
 
-driver = webdriver.Chrome(service=Service(chrome_driver_path), options=options)
+try:
+    # Initialize Chrome WebDriver with options
+    browser = webdriver.Chrome(options=options)
+    print("Chrome WebDriver initialized successfully.")
+except Exception as e:
+    print(f"Failed to initialize Chrome WebDriver: {e}")
 
 
 def download_zip(folder_url):
