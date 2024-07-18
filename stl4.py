@@ -30,13 +30,11 @@ azure_endpoint = st.secrets["azure"]["az_endpoint"]
 azure_key  = st.secrets["azure"]["az_key"]
 model_id = st.secrets["azure"]["az_model_id"]
 
-def chromedriver_download():                                                    # download seleniumbase chromedriver
-    os.system('sbase install chromedriver')
-    os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/chromedriver')
-chromedriver_download()
+def setup_chromedriver():
+    # Use webdriver-manager to download and setup ChromeDriver
+    return ChromeDriverManager().install()
 
-# Setup Selenium WebDriver
-chrome_driver_path = "/home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/chromedriver"  # Linux path for Streamlit Community Cloud
+chrome_driver_path = setup_chromedriver()
 
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')  # Run in headless mode
