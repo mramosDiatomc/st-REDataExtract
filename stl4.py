@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from webdriver_manager.chrome import ChromeDriverManager
+##from webdriver_manager.chrome import ChromeDriverManager
 from PyPDF2 import PdfReader, PdfWriter
 from azure.ai.formrecognizer import DocumentAnalysisClient
 from azure.core.credentials import AzureKeyCredential
@@ -31,19 +31,16 @@ azure_key  = st.secrets["azure"]["az_key"]
 model_id = st.secrets["azure"]["az_model_id"]
 
 @st.cache_resource
-def setup_chromedriver():
-    # Use webdriver-manager to download and setup ChromeDriver
-    return ChromeDriverManager().install()
-
-chrome_driver_path = setup_chromedriver()
-
-options = webdriver.ChromeOptions()
-options.add_argument('--headless')  # Run in headless mode
+# Configure Selenium to use Chromium
+options = Options()
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
+options.add_argument('--headless')
+options.add_argument('--log-level=3')
 
-# Initialize the WebDriver with the path from webdriver-manager
-driver = webdriver.Chrome(service=Service(chrome_driver_path), options=options)
+# Set the path to the Chromium browser and Chromedriver
+options.binary_location = "/usr/bin/chromium-browser"
+driver = webdriver.Chrome(executable_path='/usr/bin/chromedriver', options=options)
 
 def download_zip(folder_url):
     # Get the current list of files in the Downloads folder
