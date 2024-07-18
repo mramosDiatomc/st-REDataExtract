@@ -30,6 +30,7 @@ azure_endpoint = st.secrets["azure"]["az_endpoint"]
 azure_key  = st.secrets["azure"]["az_key"]
 model_id = st.secrets["azure"]["az_model_id"]
 
+@st.cache_resource
 def setup_chromedriver():
     # Use webdriver-manager to download and setup ChromeDriver
     return ChromeDriverManager().install()
@@ -41,8 +42,8 @@ options.add_argument('--headless')  # Run in headless mode
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 
+# Initialize the WebDriver with the path from webdriver-manager
 driver = webdriver.Chrome(service=Service(chrome_driver_path), options=options)
-
 
 def download_zip(folder_url):
     # Get the current list of files in the Downloads folder
