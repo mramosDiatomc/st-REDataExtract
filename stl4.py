@@ -31,16 +31,38 @@ azure_key  = st.secrets["azure"]["az_key"]
 model_id = st.secrets["azure"]["az_model_id"]
 
 @st.cache_resource
-# Configure Selenium to use Chromium
+def chromedriver_download():
+    # Install ChromeDriver using SeleniumBase
+    os.system('sbase install chromedriver')
+    
+    # Create a symbolic link to the chromedriver executable
+    chromedriver_path = '/home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/chromedriver'
+    link_path = 'chromedriver'
+    
+    if not os.path.exists(link_path):
+        try:
+            os.symlink(chromedriver_path, link_path)
+        except FileExistsError:
+            pass
+
+chromedriver_download()
+
+# Now set up Selenium with the installed ChromeDriver
+
+
 options = Options()
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument('--headless')
-options.add_argument('--log-level=3')
+options.add_argument('--disable-gpu')
 
-# Set the path to the Chromium browser and Chromedriver
-options.binary_location = "/usr/bin/chromium-browser"
-driver = webdriver.Chrome(executable_path='/usr/bin/chromedriver', options=options)
+try:
+    # Initialize webdriver with the configured options and service
+    service = Service('chromedriver')
+    driver = webdriver.Chrome(service=service, options=options)
+    # Example: driver.get('https://www.example.com')
+except Exception as e:
+    print(f"Exception occurred: {e}")
 
 def download_zip(folder_url):
     # Get the current list of files in the Downloads folder
