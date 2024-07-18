@@ -1,3 +1,5 @@
 chromium
 chromium-browser
 chromium-chromedriver
+wget
+unzip
