@@ -19,7 +19,6 @@ from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 import shutil
 import glob
-from webdriver_manager.core.os_manager import ChromeType
 
 
 # Page setup
@@ -31,29 +30,25 @@ azure_endpoint = st.secrets["azure"]["az_endpoint"]
 azure_key  = st.secrets["azure"]["az_key"]
 model_id = st.secrets["azure"]["az_model_id"]
 
-@st.cache_resource
-def get_driver():
-    options = Options()
-    options.add_argument("--disable-gpu")
-    options.add_argument("--headless")
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
+def chromedriver_download():                                                    # download seleniumbase chromedriver
+    os.system('sbase install chromedriver')
+    os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/chromedriver')
+chromedriver_download()
 
-    driver = webdriver.Chrome(
-        service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),
-        options=options
-    )
-    return driver
+# Setup Selenium WebDriver
+chrome_driver_path = "/home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/chromedriver"  # Linux path for Streamlit Community Cloud
+
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')  # Run in headless mode
+options.add_argument('--no-sandbox')
+options.add_argument('--disable-dev-shm-usage')
+
+driver = webdriver.Chrome(service=Service(chrome_driver_path), options=options)
+
 
 def download_zip(folder_url):
-    driver = get_driver()
-
     # Get the current list of files in the Downloads folder
-    downloads_folder = os.path.expanduser('~/Downloads')
-
-    # Create the downloads folder if it doesn't exist
-    if not os.path.exists(downloads_folder):
-        os.makedirs(downloads_folder)
+    downloads_folder = os.path.join(os.path.expanduser("~"), "Downloads")
     before_download = set(os.listdir(downloads_folder))
     
     driver.get(folder_url)
