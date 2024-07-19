@@ -59,7 +59,7 @@ options.add_argument('--disable-gpu')
 try:
     # Initialize webdriver with the configured options and service
     service = Service('chromedriver')
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = webdriver.Chrome(service=Service(chrome_driver_path), options=options)
     # Example: driver.get('https://www.example.com')
 except Exception as e:
     print(f"Exception occurred: {e}")
