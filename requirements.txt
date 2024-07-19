@@ -1,5 +1,5 @@
 streamlit==1.35.0
-webdriver-manager
+openpyxl
 seleniumbase
 selenium
 PyPDF2==3.0.1
