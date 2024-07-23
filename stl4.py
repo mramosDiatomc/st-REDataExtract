@@ -48,7 +48,12 @@ except Exception as e:
 
 def download_zip(folder_url):
     # Get the current list of files in the Downloads folder
-    downloads_folder = os.path.join(os.path.expanduser("~"), "Downloads")
+    # Define a custom download directory
+    downloads_folder = "/tmp/Downloads"
+    
+    # Ensure the download directory exists
+    os.makedirs(downloads_folder, exist_ok=True)
+    
     before_download = set(os.listdir(downloads_folder))
     
     driver.get(folder_url)
