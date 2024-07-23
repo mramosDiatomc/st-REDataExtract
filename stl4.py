@@ -30,10 +30,19 @@ azure_endpoint = st.secrets["azure"]["az_endpoint"]
 azure_key  = st.secrets["azure"]["az_key"]
 model_id = st.secrets["azure"]["az_model_id"]
 
+# Start virtual display
+vdisplay = Xvfb()
+vdisplay.start()
+
 # Setup Selenium WebDriver
 options = Options()
 options.headless = True
-driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)   
+
+try:
+    driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
+except Exception as e:
+    st.error(f"Failed to initialize WebDriver: {e}")
+    st.stop()
 
 
 def download_zip(folder_url):
@@ -742,3 +751,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Stop virtual display
+vdisplay.stop()
