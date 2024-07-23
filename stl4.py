@@ -19,6 +19,7 @@ from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 import shutil
 import glob
+from xvfbwrapper import Xvfb
 
 
 # Page setup
