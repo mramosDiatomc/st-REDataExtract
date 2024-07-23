@@ -1,3 +1,2 @@
-chromium
-chromium-browser
-chromium-chromedriver
+firefox-esr
+xvfb
