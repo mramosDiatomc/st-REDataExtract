@@ -6,10 +6,10 @@ import streamlit as st
 from tqdm import tqdm
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
-##from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 from PyPDF2 import PdfReader, PdfWriter
 from azure.ai.formrecognizer import DocumentAnalysisClient
 from azure.core.credentials import AzureKeyCredential
@@ -30,39 +30,11 @@ azure_endpoint = st.secrets["azure"]["az_endpoint"]
 azure_key  = st.secrets["azure"]["az_key"]
 model_id = st.secrets["azure"]["az_model_id"]
 
-@st.cache_resource
-def chromedriver_download():
-    # Install ChromeDriver using SeleniumBase
-    os.system('sbase install chromedriver')
-    
-    # Create a symbolic link to the chromedriver executable
-    chromedriver_path = '/home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/chromedriver'
-    link_path = 'chromedriver'
-    
-    if not os.path.exists(link_path):
-        try:
-            os.symlink(chromedriver_path, link_path)
-        except FileExistsError:
-            pass
-
-chromedriver_download()
-
-# Now set up Selenium with the installed ChromeDriver
-
-
+# Setup Selenium WebDriver
 options = Options()
-options.add_argument('--no-sandbox')
-options.add_argument('--disable-dev-shm-usage')
-options.add_argument('--headless')
-options.add_argument('--disable-gpu')
+options.headless = True
+driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)   
 
-try:
-    # Initialize webdriver with the configured options and service
-    service = Service('chromedriver')
-    driver = webdriver.Chrome(service=Service(chrome_driver_path), options=options)
-    # Example: driver.get('https://www.example.com')
-except Exception as e:
-    print(f"Exception occurred: {e}")
 
 def download_zip(folder_url):
     # Get the current list of files in the Downloads folder
