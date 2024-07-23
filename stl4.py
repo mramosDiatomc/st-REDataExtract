@@ -49,7 +49,7 @@ except Exception as e:
 def download_zip(folder_url):
     # Get the current list of files in the Downloads folder
     # Define a custom download directory
-    downloads_folder = "/tmp/"
+    downloads_folder = "/tmp"
     
     # Ensure the download directory exists
     os.makedirs(downloads_folder, exist_ok=True)
